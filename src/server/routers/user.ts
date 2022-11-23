@@ -1,7 +1,11 @@
 import { router, publicProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { prisma } from '~/server/prisma';
-import { UserSchema } from '../schema/user.schema';
+import {
+  registerUserSchema,
+  requestOtpSchema,
+  verifyOtpSchema,
+} from '../schema/user.schema';
 import { signJwt } from '~/utils/jwt';
 import { serialize } from 'cookie';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
@@ -11,7 +15,7 @@ export const userRouter = router({
     return ctx.session.user;
   }),
   'verify-otp': publicProcedure
-    .input(UserSchema.verifyOtp)
+    .input(verifyOtpSchema)
     .query(async ({ input, ctx }) => {
       const decoded = input.hash.split(':');
       const [id, email] = decoded;
@@ -40,7 +44,7 @@ export const userRouter = router({
       return { redirect: token.redirect };
     }),
   'request-otp': publicProcedure
-    .input(UserSchema.requestOtp)
+    .input(requestOtpSchema)
     .query(async ({ input }) => {
       const { email, redirect } = input;
 
@@ -69,7 +73,7 @@ export const userRouter = router({
       return true;
     }),
   'register-user': publicProcedure
-    .input(UserSchema.createUser)
+    .input(registerUserSchema)
     .mutation(async ({ input }) => {
       const { name, email } = input;
 
