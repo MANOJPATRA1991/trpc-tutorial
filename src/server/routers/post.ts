@@ -16,7 +16,7 @@ import { prisma } from '~/server/prisma';
 const defaultPostSelect = Prisma.validator<Prisma.PostSelect>()({
   id: true,
   title: true,
-  text: true,
+  body: true,
   createdAt: true,
   updatedAt: true,
 });
@@ -92,7 +92,7 @@ export const postRouter = router({
       z.object({
         id: z.string().uuid().optional(),
         title: z.string().min(1).max(32),
-        text: z.string().min(1),
+        body: z.string().min(1),
       }),
     )
     .mutation(async ({ input }) => {
