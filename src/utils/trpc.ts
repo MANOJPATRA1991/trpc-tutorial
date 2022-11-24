@@ -95,12 +95,19 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
-      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            staleTime: 60,
+          },
+        },
+      },
     };
   },
   /**
    * @link https://trpc.io/docs/ssr
    */
+  // client is not going to see the requests in the networks tab
   ssr: true,
   /**
    * Set headers or status code when doing SSR
