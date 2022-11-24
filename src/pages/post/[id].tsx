@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { NextPageWithLayout } from '~/pages/_app';
 import { RouterOutput, trpc } from '~/utils/trpc';
 
-type PostByIdOutput = RouterOutput['post']['byId'];
+type PostByIdOutput = RouterOutput['posts']['byId'];
 
 function PostItem(props: { post: PostByIdOutput }) {
   const { post } = props;
@@ -12,7 +12,7 @@ function PostItem(props: { post: PostByIdOutput }) {
       <h1>{post.title}</h1>
       <em>Created {post.createdAt.toLocaleDateString('en-us')}</em>
 
-      <p>{post.text}</p>
+      <p>{post.body}</p>
 
       <h2>Raw data:</h2>
       <pre>{JSON.stringify(post, null, 4)}</pre>
@@ -22,21 +22,21 @@ function PostItem(props: { post: PostByIdOutput }) {
 
 const PostViewPage: NextPageWithLayout = () => {
   const id = useRouter().query.id as string;
-  const postQuery = trpc.post.byId.useQuery({ id });
+  const { error, status, data } = trpc.posts.byId.useQuery({ id });
 
-  if (postQuery.error) {
+  if (error) {
     return (
       <NextError
-        title={postQuery.error.message}
-        statusCode={postQuery.error.data?.httpStatus ?? 500}
+        title={error.message}
+        statusCode={error.data?.httpStatus ?? 500}
       />
     );
   }
 
-  if (postQuery.status !== 'success') {
+  if (status !== 'success') {
     return <>Loading...</>;
   }
-  const { data } = postQuery;
+
   return <PostItem post={data} />;
 };
 
