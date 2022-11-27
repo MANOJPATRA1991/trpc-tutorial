@@ -10,7 +10,7 @@ import {
 import { TRPCError } from '@trpc/server';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { sendLoginEmail } from '~/utils/mailer';
-import { encode } from '~/utils/base64';
+import { decode, encode } from '~/utils/base64';
 import { getBaseUrl } from '~/utils/trpc';
 
 export const getUser = publicProcedure.query(async ({ ctx }) => {
@@ -20,7 +20,7 @@ export const getUser = publicProcedure.query(async ({ ctx }) => {
 export const verifyOtp = publicProcedure
   .input(verifyOtpSchema)
   .query(async ({ input, ctx }) => {
-    const decoded = input.hash.split(':');
+    const decoded = decode(input.hash).split(':');
     const [id, email] = decoded;
     const token = await prisma.loginToken.findFirst({
       where: {
