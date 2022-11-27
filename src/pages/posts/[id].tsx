@@ -22,7 +22,11 @@ function PostItem(props: { post: PostByIdOutput }) {
 
 const PostViewPage: NextPageWithLayout = () => {
   const id = useRouter().query.id as string;
-  const { error, status, data } = trpc.posts.byId.useQuery({ id });
+  const { data, error, isLoading } = trpc.posts.byId.useQuery({ id });
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
 
   if (error) {
     return (
@@ -31,10 +35,6 @@ const PostViewPage: NextPageWithLayout = () => {
         statusCode={error.data?.httpStatus ?? 500}
       />
     );
-  }
-
-  if (status !== 'success') {
-    return <>Loading...</>;
   }
 
   return <PostItem post={data} />;
