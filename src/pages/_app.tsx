@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import type { AppType, AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
 import { DefaultLayout } from '~/components/DefaultLayout';
+import { UserContextProvider } from '~/context/user.context';
 import { trpc } from '~/utils/trpc';
 
 export type NextPageWithLayout<
@@ -16,10 +17,20 @@ type AppPropsWithLayout = AppProps & {
 };
 
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
+  const { data, error, isLoading } = trpc.users['me'].useQuery();
+
+  if (isLoading) {
+    return <>Loading user...</>;
+  }
+
   const getLayout =
     Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
 
-  return getLayout(<Component {...pageProps} />);
+  return (
+    <UserContextProvider value={data}>
+      <main>{getLayout(<Component {...pageProps} />)}</main>
+    </UserContextProvider>
+  );
 }) as AppType;
 
 export default trpc.withTRPC(MyApp);
