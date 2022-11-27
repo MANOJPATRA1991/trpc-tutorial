@@ -7,7 +7,7 @@ import superjson from 'superjson';
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
 import type { AppRouter } from '~/server/routers/_app';
 
-function getBaseUrl() {
+export function getBaseUrl() {
   if (typeof window !== 'undefined') {
     return '';
   }

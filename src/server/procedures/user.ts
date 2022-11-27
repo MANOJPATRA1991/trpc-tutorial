@@ -9,6 +9,9 @@ import {
 } from '../schema/user.schema';
 import { TRPCError } from '@trpc/server';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { sendLoginEmail } from '~/utils/mailer';
+import { encode } from '~/utils/base64';
+import { getBaseUrl } from '~/utils/trpc';
 
 export const getUser = publicProcedure.query(async ({ ctx }) => {
   return ctx.session.user;
@@ -46,7 +49,7 @@ export const verifyOtp = publicProcedure
 
 export const requestOtp = publicProcedure
   .input(requestOtpSchema)
-  .query(async ({ input }) => {
+  .mutation(async ({ input }) => {
     const { email, redirect } = input;
 
     const user = await prisma.user.findUnique({
@@ -60,7 +63,7 @@ export const requestOtp = publicProcedure
       });
     }
 
-    await prisma.loginToken.create({
+    const token = await prisma.loginToken.create({
       data: {
         redirect,
         user: {
@@ -69,6 +72,12 @@ export const requestOtp = publicProcedure
           },
         },
       },
+    });
+
+    await sendLoginEmail({
+      token: encode(`${token.id}:${user.email}`),
+      url: getBaseUrl(),
+      email: user.email,
     });
 
     return true;
