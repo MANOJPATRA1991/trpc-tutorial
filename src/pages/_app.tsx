@@ -17,7 +17,7 @@ type AppPropsWithLayout = AppProps & {
 };
 
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
-  const { data, error, isLoading } = trpc.users['me'].useQuery();
+  const { data, isLoading } = trpc.users['me'].useQuery();
 
   if (isLoading) {
     return <>Loading user...</>;
