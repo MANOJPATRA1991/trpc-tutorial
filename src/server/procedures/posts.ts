@@ -64,7 +64,6 @@ export const getPostById = protectedProcedure
 export const createPost = protectedProcedure
   .input(createPostSchema)
   .mutation(async ({ ctx, input }) => {
-    console.log({ input })
     const post = await prisma.post.create({
       data: {
         ...input,
