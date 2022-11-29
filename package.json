@@ -46,7 +46,7 @@
     "@trpc/next": "^10.0.0-rc.6",
     "@trpc/react-query": "^10.0.0-rc.6",
     "@trpc/server": "^10.0.0-rc.6",
-    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "clsx": "^1.1.1",
     "cookie": "^0.5.0",
     "jsonwebtoken": "^8.5.1",
@@ -57,11 +57,13 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.39.5",
+    "redis": "^4.5.1",
     "superjson": "^1.7.4",
     "zod": "^3.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.26.1",
+    "@types/bcryptjs": "^2.4.2",
     "@types/cookie": "^0.5.1",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/node": "^18.7.20",
