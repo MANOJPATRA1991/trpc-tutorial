@@ -8,17 +8,17 @@ generator client {
 }
 
 model User {
-  id    String @unique @default(uuid())
-  email String @unique
-  name  String @db.VarChar(255)
+  id       String   @unique @default(uuid())
+  email    String   @unique
+  name     String   @db.VarChar(255)
   verified Boolean? @default(false)
-  photo String? @default("avatar-user.png")
+  photo    String?  @default("avatar-user.png")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   password String
-  role RoleEnumType? @default(user)
+  role     RoleEnumType? @default(user)
 
   LoginToken LoginToken[]
   Post       Post[]
@@ -27,6 +27,7 @@ model User {
 model LoginToken {
   id        String   @unique @default(uuid())
   createdAt DateTime @default(now())
+  otp       String?  @db.VarChar(6)
   user      User     @relation(fields: [userId], references: [id])
   userId    String
   redirect  String   @default("/")
