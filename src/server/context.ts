@@ -8,9 +8,6 @@ import { verifyJwt } from '~/utils/jwt';
 interface ContextUser {
   id: string;
   email: string;
-  name: string;
-  iat: string;
-  expiry: number;
 }
 
 interface CreateContextOptions {
@@ -24,13 +21,16 @@ interface CreateContextOptions {
  */
 export async function createContextInner(_opts: CreateContextOptions) {
   const { req, res } = _opts;
-  const { token } = req.cookies;
+  const { access_token } = req.cookies;
 
   let user = null;
 
-  if (token) {
+  if (access_token) {
     try {
-      user = verifyJwt<ContextUser>(token);
+      user = verifyJwt<ContextUser>(
+        process.env.ACCESS_TOKEN_PUBLIC_KEY as string,
+        access_token,
+      );
     } catch (e) {
       user = null;
     }
