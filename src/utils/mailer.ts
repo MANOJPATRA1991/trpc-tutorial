@@ -1,13 +1,11 @@
 import nodemailer from 'nodemailer';
 
 export async function sendLoginEmail({
+  otp,
   email,
-  url,
-  token,
 }: {
+  otp: string;
   email: string;
-  url: string;
-  token: string;
 }) {
   const testAccount = await nodemailer.createTestAccount();
 
@@ -25,7 +23,10 @@ export async function sendLoginEmail({
     from: '"Jane Doe" <j.doe@example.com>',
     to: email,
     subject: 'Login to your account',
-    html: `Login by clicking <a href="${url}/login#token=${token}">here</a>`,
+    html: `
+      <div>
+        <p>Your new app login OTP: ${otp}
+      </div>`,
   });
 
   console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
