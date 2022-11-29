@@ -19,12 +19,15 @@ const RegisterPage = () => {
   const methods = useZodForm({
     schema: registerUserSchema,
     defaultValues: {
-      email: '',
       name: '',
+      email: '',
+      password: '',
+      passwordConfirm: '',
     },
   });
 
   function onSubmit(values: CreateUserInput) {
+    console.log(values);
     mutate(values);
   }
 
@@ -33,12 +36,18 @@ const RegisterPage = () => {
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         {error && error.message}
         <h1>Register</h1>
+        <input type="text" placeholder="Tom" {...methods.register('name')} />
+        <br />
         <input
           type="email"
           placeholder="jane.doe@example.com"
           {...methods.register('email')}
         />
-        <input type="text" placeholder="Tom" {...methods.register('name')} />
+        <br />
+        <input type="password" {...methods.register('password')} />
+        <br />
+        <input type="password" {...methods.register('passwordConfirm')} />
+        <br />
         <button>Register</button>
       </form>
 
