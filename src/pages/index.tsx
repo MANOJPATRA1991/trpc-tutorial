@@ -1,13 +1,13 @@
 import { NextPageWithLayout } from './_app';
 import Link from 'next/link';
 import { useUserContext } from '~/context/user.context';
-import LoginForm from '~/components/LoginForm';
+import LoginPage from './login';
 
 const IndexPage: NextPageWithLayout = () => {
   const user = useUserContext();
 
   if (!user) {
-    return <LoginForm />;
+    return <LoginPage />;
   }
 
   return (
