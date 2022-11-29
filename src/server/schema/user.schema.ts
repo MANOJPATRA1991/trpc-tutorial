@@ -6,7 +6,7 @@ export const loginUserSchema = z.object({
     .email('Invalid email or password'),
   password: z
     .string({ required_error: 'Password is required' })
-    .email('Invalid email or password'),
+    .min(8, 'Invalid email or password'),
 });
 
 export type LoginUserInput = TypeOf<typeof loginUserSchema>;
@@ -17,7 +17,7 @@ export const registerUserSchema = z
     email: z
       .string({ required_error: 'Email is required' })
       .email('Invalid email'),
-    photo: z.string({ required_error: 'Photo is required' }),
+    // photo: z.string({ required_error: 'Photo is required' }),
     passwordConfirm: z.string({
       required_error: 'Please confirm your password',
     }),
@@ -38,8 +38,8 @@ export const requestOtpSchema = z.object({
   redirect: z.string().default('/'),
 });
 
-export type RequestOtpInput = TypeOf<typeof requestOtpSchema>;
-
 export const verifyOtpSchema = z.object({
-  hash: z.string(),
+  otp: z.string(),
 });
+
+export type VerifyOtpInput = TypeOf<typeof verifyOtpSchema>;
