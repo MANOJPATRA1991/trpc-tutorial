@@ -39,7 +39,7 @@ export const requestOtpSchema = z.object({
 });
 
 export const verifyOtpSchema = z.object({
-  otp: z.string(),
+  otp: z.string().length(6),
 });
 
 export type VerifyOtpInput = TypeOf<typeof verifyOtpSchema>;
