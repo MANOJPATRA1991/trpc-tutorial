@@ -1,5 +1,7 @@
-import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Controller } from 'react-hook-form';
+import { AuthLayout } from '~/components/AuthLayout';
+import OTPInput from '~/components/OTPInput';
 import { useZodForm } from '~/hooks/useZodForm';
 import { VerifyOtpInput, verifyOtpSchema } from '~/server/schema/user.schema';
 import { trpc } from '~/utils/trpc';
@@ -16,7 +18,7 @@ const VerifyOtpPage = () => {
 
   const { data, mutate, error } = trpc.users['verify-otp'].useMutation({
     onSuccess() {
-      router.push(data?.redirect || '/');
+      router.replace(data?.redirect || '/');
     },
   });
 
@@ -27,16 +29,25 @@ const VerifyOtpPage = () => {
   }
 
   return (
-    <>
+    <AuthLayout>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         {error && error.message}
-        <h1>Verify OTP</h1>
-        <input type="text" {...methods.register('otp')} />
-        <br />
-        <button>Verify</button>
+        <h1 className="font-bold text-center text-2xl mb-6">Verify OTP</h1>
+        <Controller
+          control={methods.control}
+          name={methods.register('otp').name}
+          render={({ field: { onChange } }) => (
+            <OTPInput valueLength={6} onChange={onChange} />
+          )}
+        />
+        <button
+          disabled={!methods.formState.isValid}
+          className="mt-6 w-full mb-6 shadow bg-orange-300 hover:bg-orange-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded-lg"
+        >
+          Verify
+        </button>
       </form>
-      <Link href="/register">Register</Link>
-    </>
+    </AuthLayout>
   );
 };
 

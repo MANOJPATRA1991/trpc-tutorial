@@ -1,9 +1,11 @@
 import type { NextPage } from 'next';
 import type { AppType, AppProps } from 'next/app';
-import type { ReactElement, ReactNode } from 'react';
+import { useRouter } from 'next/router';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import { DefaultLayout } from '~/components/DefaultLayout';
 import { UserContextProvider } from '~/context/user.context';
 import { trpc } from '~/utils/trpc';
+import '../styles/globals.scss';
 
 export type NextPageWithLayout<
   TProps = Record<string, unknown>,
@@ -17,7 +19,15 @@ type AppPropsWithLayout = AppProps & {
 };
 
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
-  const { data, isLoading } = trpc.users['me'].useQuery();
+  const router = useRouter();
+  const { data, isLoading, refetch } = trpc.users['me'].useQuery(undefined, {
+    enabled: false,
+  });
+
+  useEffect(() => {
+    refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.route]);
 
   if (isLoading) {
     return <>Loading user...</>;
