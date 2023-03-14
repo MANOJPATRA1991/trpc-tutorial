@@ -2,6 +2,7 @@ import { CookieSerializeOptions, serialize } from 'cookie';
 import bcrypt from 'bcryptjs';
 import { prisma } from '~/server/prisma';
 import { signJwt, verifyJwt } from '~/utils/jwt';
+import { env } from '../env';
 import { publicProcedure, protectedProcedure } from '../trpc';
 import {
   registerUserSchema,
@@ -18,7 +19,7 @@ import { LoginToken, User } from '@prisma/client';
 const cookieOptions: CookieSerializeOptions = {
   path: '/',
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
+  secure: env.NODE_ENV === 'production',
   sameSite: 'lax',
 };
 
@@ -90,7 +91,7 @@ export const verifyOtp = publicProcedure
     });
 
     const accessToken = signJwt(
-      process.env.ACCESS_TOKEN_PRIVATE_KEY as string,
+      env.ACCESS_TOKEN_PRIVATE_KEY as string,
       {
         email: token.user.email,
         id: token.user.id,
@@ -101,7 +102,7 @@ export const verifyOtp = publicProcedure
     );
 
     const refreshToken = signJwt(
-      process.env.REFRESH_TOKEN_PRIVATE_KEY as string,
+      env.REFRESH_TOKEN_PRIVATE_KEY as string,
       {
         email: token.user.email,
         id: token.user.id,
@@ -217,7 +218,7 @@ export const refreshUserToken = publicProcedure.query(async ({ ctx }) => {
   }
 
   const decoded: any = verifyJwt(
-    process.env.REFRESH_TOKEN_PUBLIC_KEY as string,
+    env.REFRESH_TOKEN_PUBLIC_KEY as string,
     refresh_token,
   );
   if (!decoded) {
@@ -246,7 +247,7 @@ export const refreshUserToken = publicProcedure.query(async ({ ctx }) => {
   }
 
   const accessToken = signJwt(
-    process.env.ACCESS_TOKEN_PRIVATE_KEY as string,
+    env.ACCESS_TOKEN_PRIVATE_KEY as string,
     {
       email: decoded.email,
       id: decoded.id,

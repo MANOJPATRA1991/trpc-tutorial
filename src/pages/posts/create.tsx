@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { Button } from '~/components/Button';
 import { useZodForm } from '~/hooks/useZodForm';
 import {
   CreatePostInput,
@@ -19,6 +20,7 @@ function CreatePostPage() {
   });
 
   function onSubmit(values: CreatePostInput) {
+    console.log({values})
     mutate(values);
   }
 
@@ -26,16 +28,21 @@ function CreatePostPage() {
     <form onSubmit={methods.handleSubmit(onSubmit)}>
       {error && error.message}
 
-      <h1>Create Post</h1>
+      <h1 className="my-3">Create Post</h1>
 
       <input
         type="text"
+        className="placeholder:text-xs mb-6 appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-orange-400"
         placeholder="Your post title"
         {...methods.register('title')}
       />
       <br />
-      <textarea placeholder="Your post body" {...methods.register('body')} />
-      <button>Create post</button>
+      <textarea
+        className="placeholder:text-xs mb-6 appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-orange-400"
+        placeholder="Your post body"
+        {...methods.register('body')}
+      />
+      <Button>Create post</Button>
     </form>
   );
 }

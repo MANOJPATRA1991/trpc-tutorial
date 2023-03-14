@@ -11,9 +11,17 @@ import { trpc } from '~/utils/trpc';
 const RegisterPage = () => {
   const router = useRouter();
 
+  const requestOtp = trpc.users['request-otp'].useMutation({
+    onSuccess() {
+      router.push('/verify-otp');
+    },
+  });
+
   const { mutate, error } = trpc.users['register-user'].useMutation({
     onSuccess() {
-      router.push('/login');
+      requestOtp.mutate({
+        email: methods.getValues('email'),
+      });
     },
   });
 
@@ -28,7 +36,6 @@ const RegisterPage = () => {
   });
 
   function onSubmit(values: CreateUserInput) {
-    console.log(values);
     mutate(values);
   }
 

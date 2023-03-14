@@ -8,15 +8,18 @@ type PostByIdOutput = RouterOutput['posts']['byId'];
 function PostItem(props: { post: PostByIdOutput }) {
   const { post } = props;
   return (
-    <>
+    <div>
       <h1>{post.title}</h1>
-      <em>Created {post.createdAt.toLocaleDateString('en-us')}</em>
-
+      <hr />
+      <h2>Created at</h2>
+      <em>{post.createdAt.toLocaleDateString('en-us')}</em>
+      <hr />
+      <h2>Description</h2>
       <p>{post.body}</p>
-
+      <hr />
       <h2>Raw data:</h2>
       <pre>{JSON.stringify(post, null, 4)}</pre>
-    </>
+    </div>
   );
 }
 

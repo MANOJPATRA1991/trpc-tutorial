@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
+import { Button } from '~/components/Button';
 import { trpc } from '~/utils/trpc';
 
 function PostListsPage() {
@@ -16,7 +17,7 @@ function PostListsPage() {
 
   return (
     <div>
-      <button
+      <Button
         onClick={() => postsQuery.fetchPreviousPage()}
         disabled={
           !postsQuery.hasPreviousPage || postsQuery.isFetchingPreviousPage
@@ -27,13 +28,21 @@ function PostListsPage() {
           : postsQuery.hasPreviousPage
           ? 'Load more'
           : 'Nothing more to load'}
-      </button>
+      </Button>
+      <Button>
+        <Link href="posts/create">Create post</Link>
+      </Button>
       {postsQuery.data?.pages.map((page, index) => (
         <Fragment key={page.posts[0]?.id || index}>
           {page.posts.map((post) => (
-            <article key={post.id}>
-              <p>{post.title}</p>
-              <Link href={`/posts/${post.id}`}>Read post</Link>
+            <article
+              className="flex items-center justify-between"
+              key={post.id}
+            >
+              <p className="mr-3">{post.title}</p>
+              <Button>
+                <Link href={`/posts/${post.id}`}>Read post</Link>
+              </Button>
             </article>
           ))}
         </Fragment>

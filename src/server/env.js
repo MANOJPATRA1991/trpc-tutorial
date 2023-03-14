@@ -8,8 +8,12 @@ const { z } = require('zod');
 
 /*eslint sort-keys: "error"*/
 const envSchema = z.object({
+  ACCESS_TOKEN_PRIVATE_KEY: z.string(),
+  ACCESS_TOKEN_PUBLIC_KEY: z.string(),
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
+  REFRESH_TOKEN_PRIVATE_KEY: z.string(),
+  REFRESH_TOKEN_PUBLIC_KEY: z.string(),
 });
 
 const env = envSchema.safeParse(process.env);

@@ -1,7 +1,7 @@
 import { httpBatchLink, loggerLink } from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
-import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
-import { NextPageContext } from 'next';
+import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { NextPageContext } from 'next';
 import superjson from 'superjson';
 // ℹ️ Type-only import:
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
@@ -16,7 +16,7 @@ export function getBaseUrl() {
     return `https://${process.env.VERCEL_URL}`;
   }
 
-  // // reference for render.com
+  // reference for render.com
   if (process.env.RENDER_INTERNAL_HOSTNAME) {
     return `http://${process.env.RENDER_INTERNAL_HOSTNAME}:${process.env.PORT}`;
   }
@@ -46,10 +46,6 @@ export interface SSRContext extends NextPageContext {
  */
 export const trpc = createTRPCNext<AppRouter, SSRContext>({
   config({ ctx }) {
-    /**
-     * If you want to use SSR, you need to use the server's full URL
-     * @link https://trpc.io/docs/ssr
-     */
     return {
       /**
        * @link https://trpc.io/docs/data-transformers
@@ -65,7 +61,14 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
             process.env.NODE_ENV === 'development' ||
             (opts.direction === 'down' && opts.result instanceof Error),
         }),
+        /**
+         * @link https://trpc.io/docs/links#the-terminating-link
+         */
         httpBatchLink({
+          /**
+           * If you want to use SSR, you need to use the server's full URL
+           * @link https://trpc.io/docs/ssr
+           */
           url: `${getBaseUrl()}/api/trpc`,
           /**
            * Set custom request headers on every request from tRPC
