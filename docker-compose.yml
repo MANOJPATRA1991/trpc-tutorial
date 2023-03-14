@@ -1,7 +1,7 @@
 version: '3'
 services:
   postgres:
-    image: postgres
+    image: postgres:latest
     container_name: postgres
     ports:
       - '6500:5432'
@@ -17,6 +17,16 @@ services:
       - '6379:6379'
     volumes:
       - redis:/data
+  nextjs:
+    build:
+      context: ./
+    ports:
+      - "3000:3000"
+    container_name: next-app
+    stdin_open: true
+    volumes:
+       - .:/src
+       - /src/node_modules
 volumes:
   postgres-db:
   redis:
